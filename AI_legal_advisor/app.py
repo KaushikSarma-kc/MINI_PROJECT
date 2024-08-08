@@ -8,7 +8,7 @@ from langchain_together import Together
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.chains import ConversationalRetrievalChain
 
-st.set_page_config(page_title="LawGPT")
+st.set_page_config(page_title="AILA")
 
 # Initialize session state
 if "show_chat" not in st.session_state:
@@ -25,7 +25,7 @@ def initialize_chatbot():
     db_retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
     prompt_template = """<s>[INST]This is a chat template and As a legal chat bot specializing in Indian Penal Code queries, your primary objective is to provide accurate and concise information based on the user's questions. 
-    Also mention the act numbers according to IPC and previous judgement on similar sitations if available .Do not generate your own questions and answers. You will adhere strictly to the instructions provided, offering relevant context from the knowledge base while avoiding unnecessary details. Your responses will be brief, to the point, and in compliance with the established format. If a question falls outside the given context, you will refrain from utilizing the chat history and instead rely on your own knowledge base to generate an appropriate response. You will prioritize the user's query and refrain from posing additional questions. The aim is to deliver professional, precise, and contextually relevant information pertaining to the Indian Penal Code.
+    Also mention the act and section numbers according to IPC  .Do not generate your own questions and answers. You will adhere strictly to the instructions provided, offering relevant context from the knowledge base while avoiding unnecessary details. Your responses will be brief, to the point, and in compliance with the established format. If a question falls outside the given context, you will refrain from utilizing the chat history and instead rely on your own knowledge base to generate an appropriate response. You will prioritize the user's query and refrain from posing additional questions. The aim is to deliver professional, precise, and contextually relevant information pertaining to the Indian Penal Code.
     CONTEXT: {context}
     CHAT HISTORY: {chat_history}
     QUESTION: {question}
@@ -57,13 +57,15 @@ def reset_conversation():
 
 # Function to show the initial description page
 def show_description():
-    st.title("AI Legal Assistant - LawGPT")
+    st.title("AI Legal Advisor")
     st.image("AILA.jpg")
     st.markdown("""
-        Welcome to LawGPT, an AI-powered legal assistant specializing in Indian Penal Code queries. 
+        Welcome to AI-Legal-Advisor (AILA), an AI-powered legal assistant specializing in Indian Penal Code queries. 
         This tool provides accurate and concise information based on your questions, including act numbers according to IPC 
         and previous judgments on similar situations if available.
+        Feel free to put your query and get a satisfactory result.
     """)
+    st.markdown(""" """)
     st.button("Try Now", on_click=lambda: st.session_state.update({"show_chat": True}))
 
 # Show the description or chatbot based on session state
@@ -71,11 +73,12 @@ if not st.session_state.show_chat:
     show_description()
 else:
     qa = initialize_chatbot()
+    st.image("AILA.jpg")
     for message in st.session_state.messages:
         with st.chat_message(message.get("role")):
             st.write(message.get("content"))
 
-    input_prompt = st.chat_input("Say something")
+    input_prompt = st.chat_input("Enter your Query : ")
 
     if input_prompt:
         with st.chat_message("user"):
